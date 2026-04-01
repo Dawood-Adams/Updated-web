@@ -1,312 +1,940 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dawood — Portfolio</title>
+  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/scrollreveal"></script>
 
-    <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    :root {
+      --bg:        #0A0A0F;
+      --surface:   #111118;
+      --surface2:  #18181F;
+      --border:    rgba(255,255,255,0.07);
+      --accent:    #E8C547;
+      --accent2:   #FF6B35;
+      --text:      #E8E8F0;
+      --muted:     #6B6B80;
+      --header-h:  4rem;
+      --display:   'Syne', sans-serif;
+      --body:      'DM Sans', sans-serif;
+    }
 
-    <!-- =====BOX ICONS===== -->
-    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-    <title>Dawood's Domain</title>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-    <style>
-        /* ===== Modal for images/videos ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            padding-top: 50px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.8);
-        }
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 80%;
-            max-height: 80%;
-            border-radius: 10px;
-            animation: zoomIn 0.3s ease;
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .modal-close:hover {
-            color: #4db5ff;
-        }
-        @keyframes zoomIn {
-            from {transform: scale(0.5); opacity: 0;}
-            to {transform: scale(1); opacity: 1;}
-        }
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
 
-        /* Project gallery */
-        .project-gallery {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-        .project-gallery img, .project-gallery video {
-            width: 200px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .project-gallery img:hover, .project-gallery video:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    ul { list-style: none; }
 
-        /* Widen project titles */
-        .project-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #4db5ff;
-        }
-    </style>
+    /* ── HEADER ── */
+    .l-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      height: var(--header-h);
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .nav__logo {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+    }
+
+    .nav__list {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav__link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav__link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    .nav__link:hover, .nav__link.active-link { color: var(--text); }
+    .nav__link:hover::after, .nav__link.active-link::after { width: 100%; }
+
+    .nav__toggle {
+      display: none;
+      font-size: 1.5rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── HOME ── */
+    #home {
+      min-height: 100vh;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: calc(var(--header-h) + 4rem) 2rem 4rem;
+      gap: 4rem;
+      position: relative;
+    }
+
+    /* Glow blob in bg */
+    #home::before {
+      content: '';
+      position: absolute;
+      top: 20%; right: 10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(232,197,71,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .home__eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .home__title {
+      font-family: var(--display);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .home__title-color { color: var(--accent); }
+
+    .home__subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+
+    .home__actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 0.8rem 1.8rem;
+      border-radius: 2px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0A0A0F;
+    }
+    .btn-primary:hover {
+      background: #f0d060;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(232,197,71,0.25);
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .home__social {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .home__social-icon {
+      font-size: 1.4rem;
+      color: var(--muted);
+      transition: color 0.3s, transform 0.3s;
+      width: max-content;
+    }
+    .home__social-icon:hover { color: var(--accent); transform: translateX(4px); }
+
+    .home__img-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .home__blob {
+      fill: var(--accent);
+      width: 100%;
+      max-width: 460px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 60px rgba(232,197,71,0.15));
+    }
+
+    .home__blob-img { width: 360px; }
+
+    /* ── ABOUT ── */
+    #about { border-top: 1px solid var(--border); }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about__img-frame {
+      position: relative;
+    }
+
+    .about__img-frame::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border: 1px solid var(--accent);
+      opacity: 0.2;
+      border-radius: 4px;
+    }
+
+    .about__img-frame img {
+      width: 100%;
+      border-radius: 4px;
+      filter: grayscale(20%) contrast(1.05);
+    }
+
+    .about__tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(232,197,71,0.1);
+      color: var(--accent);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .about__text {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+    }
+
+    .about__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── SKILLS ── */
+    #skills { border-top: 1px solid var(--border); }
+
+    .skills__grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .skill-item {
+      margin-bottom: 1.8rem;
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .skill-name {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .skill-name i { font-size: 1.3rem; color: var(--accent); }
+
+    .skill-pct {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: var(--display);
+    }
+
+    .skill-track {
+      height: 3px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .skills__extras {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .skill-card:hover {
+      border-color: rgba(232,197,71,0.3);
+      transform: translateY(-3px);
+    }
+
+    .skill-card i {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-card-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* ── WORK ── */
+    #work { border-top: 1px solid var(--border); }
+
+    .work__projects { display: flex; flex-direction: column; gap: 4rem; }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 3rem;
+      align-items: start;
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .project-card:hover { border-color: rgba(232,197,71,0.2); }
+
+    .project-num {
+      font-family: var(--display);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-title {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      letter-spacing: -0.02em;
+    }
+
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .project-gallery img,
+    .project-gallery video {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .project-gallery img:hover,
+    .project-gallery video:hover {
+      transform: scale(1.04);
+      border-color: rgba(232,197,71,0.4);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ── CONTACT ── */
+    #contact { border-top: 1px solid var(--border); }
+
+    .contact__grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact__info-title {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact__info-text {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact__links { display: flex; flex-direction: column; gap: 1rem; }
+
+    .contact__link-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+    .contact__link-item:hover { color: var(--accent); }
+    .contact__link-item i { font-size: 1.2rem; color: var(--accent); }
+
+    .contact__form { display: flex; flex-direction: column; gap: 1rem; }
+
+    .contact__input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.9rem 1.1rem;
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s;
+      resize: vertical;
+    }
+    .contact__input::placeholder { color: var(--muted); }
+    .contact__input:focus { border-color: rgba(232,197,71,0.5); }
+
+    textarea.contact__input { min-height: 130px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer__brand {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .footer__icons { display: flex; gap: 1.2rem; }
+    .footer__icon {
+      font-size: 1.3rem;
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .footer__icon:hover { color: var(--accent); }
+
+    .footer__copy { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── MODAL ── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal.open { display: flex; }
+
+    .modal-content {
+      max-width: 85vw;
+      max-height: 85vh;
+      border-radius: 4px;
+      animation: zoomIn 0.3s ease;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 1.5rem; right: 2rem;
+      font-size: 2.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.3s;
+    }
+    .modal-close:hover { color: var(--accent); }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      #home { grid-template-columns: 1fr; padding-top: calc(var(--header-h) + 3rem); }
+      .home__img-wrap { display: none; }
+      .about__grid, .skills__grid, .contact__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .project-card { grid-template-columns: 1fr; gap: 1.5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .nav__list { display: none; }
+      .nav__toggle { display: block; }
+      .nav__menu.show .nav__list {
+        display: flex; flex-direction: column;
+        position: fixed; top: var(--header-h); right: 0;
+        width: 75%; height: 100%;
+        background: var(--surface);
+        padding: 2rem;
+        gap: 1.5rem;
+        border-left: 1px solid var(--border);
+      }
+    }
+  </style>
 </head>
 <body>
-    <!--===== HEADER =====-->
-    <header class="l-header">
-        <nav class="nav bd-grid">
-            <div>
-                <a href="#" class="nav__logo">Dawood</a>
-            </div>
 
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
-                    <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-                    <li class="nav__item"><a href="#skills" class="nav__link">Skillset</a></li>
-                    <li class="nav__item"><a href="#work" class="nav__link">Course Work</a></li>
-                    <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                </ul>
-            </div>
+  <!-- MODAL -->
+  <div class="modal" id="modal" onclick="closeModal()">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+  </div>
 
-            <div class="nav__toggle" id="nav-toggle">
-                <i class='bx bx-menu'></i>
-            </div>
-        </nav>
-    </header>
+  <!-- HEADER -->
+  <header class="l-header">
+    <nav class="nav">
+      <a href="#" class="nav__logo">Dawood</a>
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li><a href="#home"    class="nav__link active-link">Home</a></li>
+          <li><a href="#about"   class="nav__link">About</a></li>
+          <li><a href="#skills"  class="nav__link">Skillset</a></li>
+          <li><a href="#work"    class="nav__link">Course Work</a></li>
+          <li><a href="#contact" class="nav__link">Contact</a></li>
+        </ul>
+      </div>
+      <div class="nav__toggle" id="nav-toggle"><i class='bx bx-menu'></i></div>
+    </nav>
+  </header>
 
-    <main class="l-main">
-        <!--===== HOME =====-->
-        <section class="home bd-grid" id="home">
-            <div class="home__data">
-                <h1 class="home__title">Hi,<br>I'm <span class="home__title-color">Dawood</span><br>Rookie Programmer</h1>
-                <a href="#contact" class="button">Contact</a>
-            </div>
+  <main>
 
-            <div class="home__social">
-                <a href="https://github.com/Dawood-Adams/inspire-steam" target="_blank" class="home__social-icon"><i class='bx bxl-github'></i></a>
-                <a href="https://www.instagram.com/instrumental_amani/" target="_blank" class="home__social-icon"><i class='bx bxl-instagram' ></i></a>
-            </div>
-
-            <div class="home__img">
-                <svg class="home__blob" viewBox="0 0 479 467" xmlns="http://www.w3.org/2000/svg">
-                    <mask id="mask0" mask-type="alpha">
-                        <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
-                    </mask>
-                    <g mask="url(#mask0)">
-                        <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
-                        <image class="home__blob-img" x="0" y="-10" href="./assets/img/Untitled design.png"/>
-                    </g>
-                </svg>
-            </div>
-        </section>
-
-        <!--===== ABOUT =====-->
-        <section class="about section " id="about">
-            <h2 class="section-title">About</h2>
-            <div class="about__container bd-grid">
-                <div class="about__img">
-                    <img src="./assets/img/Profile2.jpeg" alt="Dawood's Profile Pic">
-                </div>
-                
-                <div>
-                    <h2 class="about__subtitle">I'm Dawood</h2>
-                    <p class="about__text">
-                        Hi, my name is Dawood and I'm currently a student in JKUAT taking part in the "Inspire in Steam" program where we learn mostly about various stem projects partaining computer science.
-                    </p>           
-                </div>                                   
-            </div>
-        </section>
-
-        <!--===== SKILLS =====-->
-        <section class="skills section" id="skills">
-            <h2 class="section-title">Skillset</h2>
-            <div class="skills__container bd-grid">          
-                <div>
-                    <h2 class="skills__subtitle">Professional Skills</h2>
-                    <p class="skills__text">From this course we learnt a lot of things.</p><br><p>These include:</p><br> <p>-Robotics</p><br><p>-IOT</p><br><p>-Programming</p><br><p>UIUX</p>
-
-                    <div class="skills__data">
-                        <div class="skills__names">
-                            <i class='bx bxl-html5 skills__icon'></i>
-                            <span class="skills__name">HTML5</span>
-                        </div>
-                        <div class="skills__bar skills__html"></div>
-                        <div><span class="skills__percentage">95%</span></div>
-                    </div>
-
-                    <div class="skills__data">
-                        <div class="skills__names">
-                            <i class='bx bxl-css3 skills__icon'></i>
-                            <span class="skills__name">CSS3</span>
-                        </div>
-                        <div class="skills__bar skills__css"></div>
-                        <div><span class="skills__percentage">85%</span></div>
-                    </div>
-
-                    <div class="skills__data">
-                        <div class="skills__names">
-                            <i class='bx bxl-javascript skills__icon' ></i>
-                            <span class="skills__name">JavaScript</span>
-                        </div>
-                        <div class="skills__bar skills__js"></div>
-                        <div><span class="skills__percentage">65%</span></div>
-                    </div>
-
-                    <div class="skills__data">
-                        <div class="skills__names">
-                            <i class='bx bxs-paint skills__icon'></i>
-                            <span class="skills__name">UI/UX</span>
-                        </div>
-                        <div class="skills__bar skills__ux"></div>
-                        <div><span class="skills__percentage">85%</span></div>
-                    </div>
-                </div>
-                
-                <div>              
-                    <img src="./assets/img/Skills picture.png" alt="" class="skills__img">
-                </div>
-            </div>
-        </section>
-
-        <!--===== WORK =====-->
-        <section class="work section" id="work">
-            <h2 class="section-title">Course Work</h2>
-            
-            <!-- Python Project -->
-            <div class="project">
-                <h3 class="project-title">Python Programming</h3>
-                <p>In this section, we were introduced to the basics of programming via Python programming language which acted as a firm foundation on which we built on during the entirety of the programm</p>
-                <div class="project-gallery">
-                    <img src="./assets/img/drone.png" alt="Python Demo 1" onclick="openModal(this)">
-                </div>
-            </div>
-
-            <!-- IoT & Robotics Project -->
-            <div class="project">
-                <h3 class="project-title">IoT & Robotics</h3>
-                <p>In this section we learnt about the fundamentals of robotics and how to make various autonomous systems through simulations we did using Wokwi and RoboDK. We also had practical experience in iot by using thonny </p>
-                <div class="project-gallery">
-                    <video src="./assets/img/iotvideonew.mp4" onclick="openModal(this)" controls muted></video>
-                    <video src="./assets/img/Robodk.mp4" onclick="openModal(this)" controls muted></video>
-                    <img src="./assets/img/iotpicture.jpeg" onclick="openModal(this)" alt="IoT Photo">
-
-                </div>
-            </div>
-
-            <!-- Web Development Project -->
-            <div class="project">
-                <h3 class="project-title">Web Development (HTML/CSS/JS)</h3>
-                <p>Developed responsive websites, interactive UI components, and dynamic pages using HTML, CSS, and JavaScript. Focused on user-friendly design and performance.</p>
-                <div class="project-gallery">
-                    <video src="./assets/img/websitetrial.mp4" onclick="openModal(this)" controls muted></video>
-                </div>
-            </div>
-
-            <!-- UI/UX Project -->
-            <div class="project">
-                <h3 class="project-title">UI/UX Design</h3>
-                <p>Creating wireframes, prototypes, and visual designs to improve usability and user experience across web and mobile platforms.</p>
-                <div class="project-gallery">
-                    <img src="assets/img/uiux1.jpg" alt="UI/UX Demo 1" onclick="openModal(this)">
-                    <img src="assets/img/uiux2.jpg" alt="UI/UX Demo 2" onclick="openModal(this)">
-                    <img src="assets/img/uiux3.jpg" alt="UI/UX Demo 3" onclick="openModal(this)">
-                </div>
-            </div>
-        </section>
-
-        <!--===== CONTACT =====-->
-        <section class="contact section" id="contact">
-            <h2 class="section-title">Contact</h2>
-
-            <div class="contact__container bd-grid">
-                <form action="" class="contact__form">
-                    <input type="text" placeholder="Name" class="contact__input">
-                    <input type="email" placeholder="Email" class="contact__input">
-                    <textarea placeholder="Your Message" class="contact__input"></textarea>
-                    <input type="submit" value="Submit" class="contact__button button">
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <!--===== FOOTER =====-->
-    <footer class="footer">
-        <p class="footer__title">Dawood</p>
-        <div class="footer__social">
-            <a href="https://github.com/Dawood-Adams/inspire-steam" class="footer__icon"><i class='bx bxl-github' ></i></a>
-            <a href="https://www.instagram.com/instrumental_amani/" class="footer__icon"><i class='bx bxl-instagram' ></i></a>
+    <!-- HOME -->
+    <section id="home">
+      <div class="home__data">
+        <p class="home__eyebrow">Portfolio — 2025</p>
+        <h1 class="home__title">
+          Hi,<br>
+          I'm <span class="home__title-color">Dawood</span>
+        </h1>
+        <p class="home__subtitle">Rookie Programmer & STEM Enthusiast</p>
+        <div class="home__actions">
+          <a href="#contact" class="btn btn-primary">Get in Touch</a>
+          <a href="#work"    class="btn btn-ghost">View My Work</a>
         </div>
-        <p class="footer__copy">&#169; Dawood. All rights reserved</p>
-    </footer>
+        <div class="home__social">
+          <a href="https://github.com/Dawood-Adams/inspire-steam" target="_blank" class="home__social-icon"><i class='bx bxl-github'></i></a>
+          <a href="https://www.instagram.com/daudadama/?hl=en"    target="_blank" class="home__social-icon"><i class='bx bxl-instagram'></i></a>
+        </div>
+      </div>
 
-    <!--===== SCROLL REVEAL =====-->
-    <script src="https://unpkg.com/scrollreveal"></script>
+      <div class="home__img-wrap">
+        <svg class="home__blob" viewBox="0 0 479 467" xmlns="http://www.w3.org/2000/svg">
+          <mask id="mask0" mask-type="alpha">
+            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
+          </mask>
+          <g mask="url(#mask0)">
+            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
+            <image class="home__blob-img" x="0" y="-10" href="./assets/img/Untitled design.png"/>
+          </g>
+        </svg>
+      </div>
+    </section>
 
-    <!--===== MAIN JS =====-->
-    <script src="assets/js/main.js"></script>
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <p class="section-label">Who I Am</p>
+      <h2 class="section-title">About Me</h2>
+      <div class="about__grid">
+        <div class="about__img-frame">
+          <img src="./assets/img/Profile2.jpeg" alt="Dawood's Profile">
+        </div>
+        <div>
+          <span class="about__tag">JKUAT · Inspire in STEAM</span>
+          <p class="about__text">
+            Hi, I'm Dawood — a student at JKUAT participating in the Inspire in STEAM program, where we explore the intersection of technology, design, and real-world problem solving.
+          </p>
+          <p class="about__text">
+            Through this program I've gained hands-on experience in robotics, IoT, programming, and UI/UX design. I enjoy building things that are both functional and visually compelling.
+          </p>
+          <div class="about__stats">
+            <div>
+              <div class="stat-num">4+</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div>
+              <div class="stat-num">4</div>
+              <div class="stat-label">Skill Areas</div>
+            </div>
+            <div>
+              <div class="stat-num">1</div>
+              <div class="stat-label">Program Year</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        // Modal open/close
-        function openModal(element){
-            let modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.onclick = function(){ document.body.removeChild(modal); };
-            
-            let content;
-            if(element.tagName === 'IMG'){
-                content = document.createElement('img');
-                content.src = element.src;
-            } else if(element.tagName === 'VIDEO'){
-                content = document.createElement('video');
-                content.src = element.src;
-                content.controls = true;
-                content.autoplay = true;
-            }
-            content.className = 'modal-content';
-            modal.appendChild(content);
+    <!-- SKILLS -->
+    <section id="skills" class="section">
+      <p class="section-label">What I Know</p>
+      <h2 class="section-title">Skillset</h2>
+      <div class="skills__grid">
+        <div class="skills__bars">
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><i class='bx bxl-html5'></i> HTML5</span>
+              <span class="skill-pct">95%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" data-width="95%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><i class='bx bxl-css3'></i> CSS3</span>
+              <span class="skill-pct">85%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" data-width="85%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><i class='bx bxl-javascript'></i> JavaScript</span>
+              <span class="skill-pct">65%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" data-width="65%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><i class='bx bxs-paint'></i> UI/UX</span>
+              <span class="skill-pct">85%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" data-width="85%"></div></div>
+          </div>
+        </div>
 
-            let closeBtn = document.createElement('span');
-            closeBtn.innerHTML = '&times;';
-            closeBtn.className = 'modal-close';
-            closeBtn.onclick = function(e){
-                e.stopPropagation();
-                document.body.removeChild(modal);
-            };
-            modal.appendChild(closeBtn);
+        <div class="skills__extras">
+          <div class="skill-card">
+            <i class='bx bx-chip'></i>
+            <div class="skill-card-name">Robotics</div>
+          </div>
+          <div class="skill-card">
+            <i class='bx bx-wifi'></i>
+            <div class="skill-card-name">IoT</div>
+          </div>
+          <div class="skill-card">
+            <i class='bx bxl-python'></i>
+            <div class="skill-card-name">Python</div>
+          </div>
+          <div class="skill-card">
+            <i class='bx bx-mobile-alt'></i>
+            <div class="skill-card-name">Prototyping</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            document.body.appendChild(modal);
-            modal.style.display = 'block';
+    <!-- WORK -->
+    <section id="work" class="section">
+      <p class="section-label">What I've Built</p>
+      <h2 class="section-title">Course Work</h2>
+
+      <div class="work__projects">
+
+        <div class="project-card">
+          <div>
+            <p class="project-num">01 — Python</p>
+            <h3 class="project-title">Python Programming</h3>
+            <p class="project-desc">Introduced to programming fundamentals through Python — the foundational layer for everything else in the program. Covered variables, control flow, functions, and basic automation.</p>
+          </div>
+          <div class="project-gallery">
+            <img src="./assets/img/drone.png" alt="Python Demo" onclick="openModal(this)">
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div>
+            <p class="project-num">02 — IoT & Robotics</p>
+            <h3 class="project-title">IoT & Robotics</h3>
+            <p class="project-desc">Explored autonomous systems through simulations with Wokwi and RoboDK. Built practical IoT circuits using Thonny and real microcontrollers, learning how hardware and software interact.</p>
+          </div>
+          <div class="project-gallery">
+            <video src="./assets/img/iotvideonew.mp4" onclick="openModal(this)" controls muted></video>
+            <video src="./assets/img/Robodk.mp4" onclick="openModal(this)" controls muted></video>
+            <img src="./assets/img/iotpicture.jpeg" onclick="openModal(this)" alt="IoT Photo">
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div>
+            <p class="project-num">03 — Web Dev</p>
+            <h3 class="project-title">Web Development</h3>
+            <p class="project-desc">Built responsive, interactive websites using HTML, CSS, and JavaScript. Focused on clean UI structure, performance, and user-friendly design patterns.</p>
+          </div>
+          <div class="project-gallery">
+            <video src="./assets/img/websitetrial.mp4" onclick="openModal(this)" controls muted></video>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div>
+            <p class="project-num">04 — Design</p>
+            <h3 class="project-title">UI/UX Design</h3>
+            <p class="project-desc">Designed wireframes, prototypes, and visual interfaces for web and mobile platforms. Focused on usability, accessibility, and visual hierarchy.</p>
+          </div>
+          <div class="project-gallery">
+            <img src="assets/img/uiux1.jpg" alt="UI/UX 1" onclick="openModal(this)">
+            <img src="assets/img/uiux2.jpg" alt="UI/UX 2" onclick="openModal(this)">
+            <img src="assets/img/uiux3.jpg" alt="UI/UX 3" onclick="openModal(this)">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <p class="section-label">Get In Touch</p>
+      <h2 class="section-title">Contact</h2>
+      <div class="contact__grid">
+        <div>
+          <h3 class="contact__info-title">Let's connect</h3>
+          <p class="contact__info-text">Have a question, collaboration, or just want to say hi? Send me a message and I'll get back to you.</p>
+          <div class="contact__links">
+            <a href="https://github.com/Dawood-Adams/inspire-steam" target="_blank" class="contact__link-item">
+              <i class='bx bxl-github'></i> github.com/Dawood-Adams
+            </a>
+            <a href="https://www.instagram.com/daudadama/?hl=en" target="_blank" class="contact__link-item">
+              <i class='bx bxl-instagram'></i> @daudadama
+            </a>
+          </div>
+        </div>
+        <form class="contact__form" onsubmit="return false;">
+          <input type="text"   placeholder="Your Name"    class="contact__input">
+          <input type="email"  placeholder="Your Email"   class="contact__input">
+          <textarea            placeholder="Your Message" class="contact__input"></textarea>
+          <button type="submit" class="btn btn-primary" style="border:none;align-self:flex-start;">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer__brand">Dawood</span>
+    <div class="footer__icons">
+      <a href="https://github.com/Dawood-Adams/inspire-steam" class="footer__icon"><i class='bx bxl-github'></i></a>
+      <a href="https://www.instagram.com/daudadama/?hl=en"    class="footer__icon"><i class='bx bxl-instagram'></i></a>
+    </div>
+    <p class="footer__copy">© 2025 Dawood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ── Mobile menu ──
+    const toggle = document.getElementById('nav-toggle');
+    const menu   = document.getElementById('nav-menu');
+    toggle.addEventListener('click', () => menu.classList.toggle('show'));
+
+    document.querySelectorAll('.nav__link').forEach(l => {
+      l.addEventListener('click', () => menu.classList.remove('show'));
+    });
+
+    // ── Active link on scroll ──
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      sections.forEach(sec => {
+        const top = sec.offsetTop - 80;
+        const link = document.querySelector('.nav__link[href="#' + sec.id + '"]');
+        if (!link) return;
+        if (y >= top && y < top + sec.offsetHeight) {
+          document.querySelectorAll('.nav__link').forEach(l => l.classList.remove('active-link'));
+          link.classList.add('active-link');
         }
-    </script>
+      });
+    });
+
+    // ── Skill bars animate on scroll ──
+    const fills = document.querySelectorAll('.skill-fill');
+    const skillObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.width = e.target.dataset.width;
+          skillObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    fills.forEach(f => skillObs.observe(f));
+
+    // ── Modal ──
+    const modal = document.getElementById('modal');
+
+    function openModal(el) {
+      modal.innerHTML = '<span class="modal-close" onclick="closeModal()">&times;</span>';
+      let content;
+      if (el.tagName === 'IMG') {
+        content = document.createElement('img');
+        content.src = el.src;
+      } else {
+        content = document.createElement('video');
+        content.src = el.src;
+        content.controls = true;
+        content.autoplay = true;
+      }
+      content.className = 'modal-content';
+      modal.appendChild(content);
+      modal.classList.add('open');
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.innerHTML = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── ScrollReveal ──
+    const sr = ScrollReveal({ origin: 'bottom', distance: '40px', duration: 800, delay: 100 });
+    sr.reveal('.home__data', {});
+    sr.reveal('.home__img-wrap', { delay: 250 });
+    sr.reveal('.about__img-frame', {});
+    sr.reveal('.about__tag, .about__text, .about__stats', { interval: 100 });
+    sr.reveal('.skill-item', { interval: 120 });
+    sr.reveal('.skill-card', { interval: 100 });
+    sr.reveal('.project-card', { interval: 150 });
+    sr.reveal('.contact__grid', {});
+  </script>
 </body>
 </html>
